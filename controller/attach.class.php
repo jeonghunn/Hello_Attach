@@ -6,6 +6,7 @@ class AttachClass{
     function attach_file($category, $page_srl, $doc_srl, $user_srl, $status)
     {
         $image_path = "files/images/";
+        $audio_path = "files/audio/";
         $binaries_path = "files/binaries/";
         $thumbnail_path = "files/thumbnail/";
 $all_result = true;
@@ -31,6 +32,11 @@ $all_result = true;
                 $kind = "image";
                 $img_name = $filename . "." . $extension;
                 $target_path = $image_path . basename($img_name);
+            } else if ($extension == "mp3" || $extension == "ogg" || $extension == "mpeg") {
+                $filename = $filevalue;
+                $kind = "audio";
+                $audio_name = $filename . "." . $extension;
+                $target_path = $audio_path . basename($audio_name);
             } else {
                 $kind = "file";
                 $target_path = $binaries_path . $filevalue;
@@ -61,7 +67,7 @@ $all_result = true;
             if ($upload_result == true) {
                 $result = Model_Attach_addAttch($page_srl, $category, $doc_srl, $user_srl, $kind, $filename, $extension, $filevalue, $size, $status);
 
-                if ($kind == "image") {
+                if ($kind == "image" || $kind == "audio") {
                     array_push($result_array['files'], array("name" => $filename . "." . $extension, "size" => $size, "url" => getCoreUrl(true) . "$target_path", "thumbnailUrl" => $thumbnail_file, "deleteUrl" => getAPIUrlS() . "?a=attach_delete&name=" . $filename . "." . $extension, "deleteType" => "DELETE"));
                 } else {
                     //bin
